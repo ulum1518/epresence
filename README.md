@@ -66,8 +66,16 @@ Berikut adalah daftar endpoint utama yang tersedia. Semua endpoint yang membutuh
 - **Deskripsi**: Mengotentikasi user dan mengembalikan JWT token.
 - **Body (Request)**:
   ```json
+  Jika menggunakan seeder
+  Akun User
   {
-      "email": "user@example.com",
+      "email": "bayu@email.com",
+      "password": "password"
+  }
+
+  Akun Supervisor
+  {
+      "email": "spv@email.com",
       "password": "password"
   }
   ```
