@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Interfaces\EpresenceRepositoryInterface;
+use App\Models\Epresence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -42,5 +43,31 @@ class EpresenceController extends Controller
             'message' => 'Absensi berhasil dicatat',
             'data' => $result['data'],
         ], 201);
+    }
+
+     public function approve(Epresence $epresence)
+    {
+        $approverId = Auth::id();
+
+        $result = $this->epresenceRepository->approve($epresence->id, $approverId);
+
+        if ($result['status'] === 'error') {
+            return response()->json(['message' => $result['message']], $result['code']);
+        }
+
+        return response()->json([
+            'message' => 'Presensi berhasil disetujui.',
+            'data' => $result['data'],
+        ]);
+    }
+
+    public function index()
+    {
+        $data = $this->epresenceRepository->getRecapData();
+
+        return response()->json([
+            'message' => 'Success get data',
+            'data' => $data
+        ]);
     }
 }

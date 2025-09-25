@@ -9,7 +9,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens;
-    
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -17,6 +17,10 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'npp',
         'npp_supervisor',
+        'password',
+    ];
+
+    protected $hidden = [
         'password',
     ];
 
