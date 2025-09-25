@@ -73,12 +73,12 @@ class EpresenceRepository implements EpresenceRepositoryInterface
             ->join('users', 'epresences.id_users', '=', 'users.id')
             ->select(
                 'users.id as id_user',
-                'users.name as nama_user',
+                'users.nama as nama_user',
                 DB::raw("waktu::date as tanggal"),
                 DB::raw("MAX(CASE WHEN type = 'IN' THEN waktu::time END) as waktu_masuk"),
                 DB::raw("MAX(CASE WHEN type = 'OUT' THEN waktu::time END) as waktu_pulang"),
-                DB::raw("MAX(CASE WHEN type = 'IN' THEN is_approve END) as is_approve_masuk"),
-                DB::raw("MAX(CASE WHEN type = 'OUT' THEN is_approve END) as is_approve_pulang")
+                DB::raw("BOOL_OR(CASE WHEN type = 'IN' THEN is_approve END) as is_approve_masuk"),
+                DB::raw("BOOL_OR(CASE WHEN type = 'OUT' THEN is_approve END) as is_approve_pulang")
             )
             ->groupBy('id_user', 'nama_user', 'tanggal')
             ->orderBy('tanggal', 'desc')
@@ -103,6 +103,8 @@ class EpresenceRepository implements EpresenceRepositoryInterface
         if (is_null($waktu)) {
             return null;
         }
-        return $isApprove ? 'APPROVE' : 'PENDING';
+        $isApproveBool = filter_var($isApprove, FILTER_VALIDATE_BOOLEAN);
+
+        return $isApproveBool ? 'APPROVE' : 'PENDING';
     }
 }
